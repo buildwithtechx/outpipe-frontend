@@ -1,0 +1,54 @@
+{
+  "name": "@outpipe/frontend-monorepo",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Outpipe dashboard, desktop app, status pages, and documentation",
+  "license": "AGPL-3.0-or-later",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n web,status,secrets-share,docs -c magenta,green,yellow,gray \"npm run dev:web\" \"npm run dev:status\" \"npm run dev:secrets-share\" \"npm run dev:docs\"",
+    "dev:web": "npm run dev --workspace apps/web",
+    "dev:status": "npm run dev --workspace apps/status",
+    "dev:secrets-share": "npm run dev --workspace apps/secrets-share",
+    "dev:docs": "npm run dev --workspace apps/docs",
+    "dev:desktop": "npm run dev --workspace apps/desktop",
+    "build": "npm run build:web && npm run build:status && npm run build:secrets-share && npm run build:docs && npm run build:desktop",
+    "build:web": "npm run generate-routes && npm run build --workspace apps/web",
+    "build:status": "npm run build --workspace apps/status",
+    "build:secrets-share": "npm run build --workspace apps/secrets-share",
+    "build:docs": "npm run build --workspace apps/docs",
+    "build:desktop": "npm run build --workspace apps/desktop",
+    "generate-routes": "npm run generate-routes --workspace apps/web",
+    "typecheck": "npm run generate-routes && tsc --noEmit -p apps/web/tsconfig.json",
+    "test": "vitest run",
+    "test:product-contracts": "vitest run apps/status/src/api.test.ts apps/web/src/features/observability/services/observability-response.test.ts apps/web/src/features/tunnels/lib/tunnel-command.test.ts apps/web/src/features/uptime/lib/status-page-settings.test.ts apps/web/src/components/navigation/workspace-products.test.ts packages/shared/index.test.ts",
+    "fmt": "biome check --write apps packages",
+    "format": "biome check apps packages",
+    "format:fix": "biome check --write apps packages"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^26.6.4",
+    "concurrently": "^10.0.5",
+    "cookie": "^2.0.1",
+    "cross-env": "7.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  },
+  "overrides": {
+    "seroval": "^1.6.7",
+    "source-map-js": "^1.2.2",
+    "postcss-selector-parser": "^7.1.6",
+    "esbuild": "0.28.1",
+    "postcss": "8.5.24",
+    "sharp": "^0.35.4",
+    "next": "^16.3.8",
+    "qs": "^6.16.0",
+    "dompurify": "^3.4.16",
+    "undici": "^7.29.1"
+  }
+}
