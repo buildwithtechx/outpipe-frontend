@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "npm run bundle:cli && tauri dev",
     "build": "npm run bundle:cli && tauri build",
-    "bundle:cli": "node -e \"fs.mkdirSync('src-tauri/resources', { recursive: true })\" && go build -o src-tauri/resources/outpipe ../../cmd/cli",
+    "bundle:cli": "node -e \"const fs = require('fs'); const cp = require('child_process'); fs.mkdirSync('src-tauri/resources', { recursive: true }); if (fs.existsSync('../../cmd/cli')) { cp.execSync('go build -o src-tauri/resources/outpipe ../../cmd/cli', { stdio: 'inherit' }); }\"",
     "typecheck": "cargo check --manifest-path src-tauri/Cargo.toml",
     "test": "vitest run --passWithNoTests"
   },
