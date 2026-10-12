@@ -7,6 +7,8 @@ import { MarketingContainer } from '#/components/layout';
 import { CliInstall } from '#/features/tunnels/components/cli-install';
 import { docsUrl } from '#/lib/docs';
 import { BeamGroup } from './beam-group';
+import { HeroAurora } from './hero-aurora';
+import { HeroAuroraFallback } from './hero-aurora-fallback';
 import { TerminalWindow } from './terminal-window';
 
 const logs = [
@@ -38,11 +40,14 @@ export function Hero() {
   return (
     <section className="relative min-h-screen overflow-hidden bg-black pb-12 pt-28 sm:pb-16 sm:pt-20">
       <div className="pointer-events-none absolute inset-0 z-0 md:translate-x-[-10%]">
-        {!reducedMotion && (
+        {!reducedMotion ? (
           <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
             <color attach="background" args={['#000000']} />
             <BeamGroup />
+            <HeroAurora />
           </Canvas>
+        ) : (
+          <HeroAuroraFallback />
         )}
       </div>
       <MarketingContainer className="relative z-10 flex flex-col items-center">

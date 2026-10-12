@@ -52,6 +52,8 @@ import { Route as OrgSlugTunnelsTunnelIdRouteImport } from './routes/$orgSlug/tu
 import { Route as OrgSlugUptimeStatusPageRouteImport } from './routes/$orgSlug/uptime_.status-page'
 import { Route as MarketingPluginsIndexRouteImport } from './routes/_marketing/plugins/index'
 import { Route as MarketingPluginsPluginIdRouteImport } from './routes/_marketing/plugins/$pluginId'
+import { Route as MarketingProductsIndexRouteImport } from './routes/_marketing/products.index'
+import { Route as MarketingProductsTunnelsRouteImport } from './routes/_marketing/products.tunnels'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
 import { Route as AdminOrganizationsOrganizationIDRouteImport } from './routes/admin/organizations/$organizationID'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
@@ -273,6 +275,17 @@ const MarketingPluginsPluginIdRoute =
     path: '/$pluginId',
     getParentRoute: () => MarketingPluginsRoute,
   } as any)
+const MarketingProductsIndexRoute = MarketingProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => MarketingRoute,
+} as any)
+const MarketingProductsTunnelsRoute =
+  MarketingProductsTunnelsRouteImport.update({
+    id: '/products/tunnels',
+    path: '/products/tunnels',
+    getParentRoute: () => MarketingRoute,
+  } as any)
 const AdminOrganizationsIndexRoute = AdminOrganizationsIndexRouteImport.update({
   id: '/organizations/',
   path: '/organizations/',
@@ -335,11 +348,13 @@ export interface FileRoutesByFullPath {
   '/$orgSlug/tunnels/$tunnelId': typeof OrgSlugTunnelsTunnelIdRoute
   '/$orgSlug/uptime/status-page': typeof OrgSlugUptimeStatusPageRoute
   '/plugins/$pluginId': typeof MarketingPluginsPluginIdRoute
+  '/products/tunnels': typeof MarketingProductsTunnelsRoute
   '/admin/organizations/$organizationID': typeof AdminOrganizationsOrganizationIDRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/$orgSlug/settings/': typeof OrgSlugSettingsIndexRoute
   '/$orgSlug/tunnels/': typeof OrgSlugTunnelsIndexRoute
   '/plugins/': typeof MarketingPluginsIndexRoute
+  '/products/': typeof MarketingProductsIndexRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
 }
@@ -380,11 +395,13 @@ export interface FileRoutesByTo {
   '/$orgSlug/tunnels/$tunnelId': typeof OrgSlugTunnelsTunnelIdRoute
   '/$orgSlug/uptime/status-page': typeof OrgSlugUptimeStatusPageRoute
   '/plugins/$pluginId': typeof MarketingPluginsPluginIdRoute
+  '/products/tunnels': typeof MarketingProductsTunnelsRoute
   '/admin/organizations/$organizationID': typeof AdminOrganizationsOrganizationIDRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/$orgSlug/settings': typeof OrgSlugSettingsIndexRoute
   '/$orgSlug/tunnels': typeof OrgSlugTunnelsIndexRoute
   '/plugins': typeof MarketingPluginsIndexRoute
+  '/products': typeof MarketingProductsIndexRoute
   '/admin/organizations': typeof AdminOrganizationsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
 }
@@ -430,11 +447,13 @@ export interface FileRoutesById {
   '/$orgSlug/tunnels/$tunnelId': typeof OrgSlugTunnelsTunnelIdRoute
   '/$orgSlug/uptime_/status-page': typeof OrgSlugUptimeStatusPageRoute
   '/_marketing/plugins/$pluginId': typeof MarketingPluginsPluginIdRoute
+  '/_marketing/products/tunnels': typeof MarketingProductsTunnelsRoute
   '/admin/organizations/$organizationID': typeof AdminOrganizationsOrganizationIDRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/$orgSlug/settings/': typeof OrgSlugSettingsIndexRoute
   '/$orgSlug/tunnels/': typeof OrgSlugTunnelsIndexRoute
   '/_marketing/plugins/': typeof MarketingPluginsIndexRoute
+  '/_marketing/products/': typeof MarketingProductsIndexRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
 }
@@ -480,11 +499,13 @@ export interface FileRouteTypes {
     | '/$orgSlug/tunnels/$tunnelId'
     | '/$orgSlug/uptime/status-page'
     | '/plugins/$pluginId'
+    | '/products/tunnels'
     | '/admin/organizations/$organizationID'
     | '/admin/users/$userId'
     | '/$orgSlug/settings/'
     | '/$orgSlug/tunnels/'
     | '/plugins/'
+    | '/products/'
     | '/admin/organizations/'
     | '/admin/users/'
   fileRoutesByTo: FileRoutesByTo
@@ -525,11 +546,13 @@ export interface FileRouteTypes {
     | '/$orgSlug/tunnels/$tunnelId'
     | '/$orgSlug/uptime/status-page'
     | '/plugins/$pluginId'
+    | '/products/tunnels'
     | '/admin/organizations/$organizationID'
     | '/admin/users/$userId'
     | '/$orgSlug/settings'
     | '/$orgSlug/tunnels'
     | '/plugins'
+    | '/products'
     | '/admin/organizations'
     | '/admin/users'
   id:
@@ -574,11 +597,13 @@ export interface FileRouteTypes {
     | '/$orgSlug/tunnels/$tunnelId'
     | '/$orgSlug/uptime_/status-page'
     | '/_marketing/plugins/$pluginId'
+    | '/_marketing/products/tunnels'
     | '/admin/organizations/$organizationID'
     | '/admin/users/$userId'
     | '/$orgSlug/settings/'
     | '/$orgSlug/tunnels/'
     | '/_marketing/plugins/'
+    | '/_marketing/products/'
     | '/admin/organizations/'
     | '/admin/users/'
   fileRoutesById: FileRoutesById
@@ -896,6 +921,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingPluginsPluginIdRouteImport
       parentRoute: typeof MarketingPluginsRoute
     }
+    '/_marketing/products/': {
+      id: '/_marketing/products/'
+      path: '/products'
+      fullPath: '/products/'
+      preLoaderRoute: typeof MarketingProductsIndexRouteImport
+      parentRoute: typeof MarketingRoute
+    }
+    '/_marketing/products/tunnels': {
+      id: '/_marketing/products/tunnels'
+      path: '/products/tunnels'
+      fullPath: '/products/tunnels'
+      preLoaderRoute: typeof MarketingProductsTunnelsRouteImport
+      parentRoute: typeof MarketingRoute
+    }
     '/admin/organizations/': {
       id: '/admin/organizations/'
       path: '/organizations'
@@ -996,6 +1035,8 @@ interface MarketingRouteChildren {
   MarketingReportBugRoute: typeof MarketingReportBugRoute
   MarketingTermsRoute: typeof MarketingTermsRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
+  MarketingProductsTunnelsRoute: typeof MarketingProductsTunnelsRoute
+  MarketingProductsIndexRoute: typeof MarketingProductsIndexRoute
 }
 
 const MarketingRouteChildren: MarketingRouteChildren = {
@@ -1007,6 +1048,8 @@ const MarketingRouteChildren: MarketingRouteChildren = {
   MarketingReportBugRoute: MarketingReportBugRoute,
   MarketingTermsRoute: MarketingTermsRoute,
   MarketingIndexRoute: MarketingIndexRoute,
+  MarketingProductsTunnelsRoute: MarketingProductsTunnelsRoute,
+  MarketingProductsIndexRoute: MarketingProductsIndexRoute,
 }
 
 const MarketingRouteWithChildren = MarketingRoute._addFileChildren(

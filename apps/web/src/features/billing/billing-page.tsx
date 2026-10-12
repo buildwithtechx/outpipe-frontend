@@ -1,6 +1,11 @@
 import { Button } from '#/components/ui/button';
+import { useDomains } from '#/features/domains/hooks/use-domains';
+import { useMembers } from '#/features/organizations/hooks/use-members';
 import { useOrganization } from '#/features/organizations/hooks/use-organization';
+import { useOrganizationTunnels } from '#/features/tunnels/hooks/use-organization-tunnels';
+import { useUsageSnapshot } from '#/features/usage/hooks/use-usage-snapshot';
 import { BillingPlanPicker } from './components/billing-plan-picker';
+import { BillingUsageMetrics } from './components/billing-usage-metrics';
 import { useBilling } from './hooks/use-billing';
 import { useBillingActions } from './hooks/use-billing-actions';
 import { useBillingInvoices } from './hooks/use-billing-invoices';
@@ -14,6 +19,10 @@ export function BillingPage({ orgSlug }: { orgSlug: string }) {
   const actions = useBillingActions(organizationId);
   const invoices = useBillingInvoices(organizationId);
   const plans = useBillingPlans(organizationId);
+  const domains = useDomains(organizationId);
+  const members = useMembers(organizationId);
+  const tunnels = useOrganizationTunnels(orgSlug);
+  const usage = useUsageSnapshot(organizationId);
 
   if (organizationQuery.isLoading || query.isLoading) {
     return <p className="p-8 text-sm text-white/55">Loading billing…</p>;
@@ -94,6 +103,17 @@ export function BillingPage({ orgSlug }: { orgSlug: string }) {
           )}
         </div>
       </section>
+      <BillingUsageMetrics
+        planKey={plan.key}
+        tunnelCount={
+          usage.data?.tunnelCount ?? tunnels.tunnelsQuery.data?.length ?? 0
+        }
+        domainCount={domains.data?.length ?? 0}
+        subdomainCount={0}
+        memberCount={members.data?.length ?? 1}
+        bandwidthBytes={usage.data?.bandwidthBytes ?? 0}
+        telemetryBytes={0}
+      />
       {!plans.isLoading && plans.data?.plans && (
         <BillingPlanPicker
           organization={organization}

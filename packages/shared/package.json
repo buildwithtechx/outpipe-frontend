@@ -12,6 +12,7 @@
   "exports": {
     ".": "./index.ts",
     "./crypto": "./crypto.ts",
+    "./hosted-plan-limits": "./hosted-plan-limits.ts",
     "./brand.css": "./theme.css",
     "./outpipe.svg": "./outpipe.svg"
   }

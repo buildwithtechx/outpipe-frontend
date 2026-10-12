@@ -1,8 +1,12 @@
+import { HOSTED_PLAN_LIMITS, resolveHostedPlan } from '@outpipe/shared';
 import { useState } from 'react';
+import { LimitModal } from '#/components/feedback';
 import { Button } from '#/components/ui/button';
 import { Input } from '#/components/ui/input';
 import { Label } from '#/components/ui/label';
+import { useBilling } from '#/features/billing/hooks/use-billing';
 import { useOrganization } from '#/features/organizations/hooks/use-organization';
+import { DomainLimitWarning } from './components/domain-limit-warning';
 import { useDomainMutations } from './hooks/use-domain-mutations';
 import { useDomains } from './hooks/use-domains';
 
@@ -12,9 +16,11 @@ export function DomainsPage({ orgSlug }: { orgSlug: string }) {
 
   const query = useDomains(organizationId);
   const mutations = useDomainMutations(organizationId);
+  const billingQuery = useBilling(organizationId);
 
   const [hostname, setHostname] = useState('');
   const [token, setToken] = useState('');
+  const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
 
   if (organizationQuery.isLoading || query.isLoading) {
     return <p className="p-8 text-sm text-white/55">Loading domains…</p>;
@@ -31,6 +37,9 @@ export function DomainsPage({ orgSlug }: { orgSlug: string }) {
   }
 
   const domains = query.data ?? [];
+  const planKey = resolveHostedPlan(billingQuery.data?.plan?.key);
+  const domainLimit = HOSTED_PLAN_LIMITS[planKey]?.maxDomains ?? 0;
+  const isAtLimit = domains.length >= domainLimit;
 
   return (
     <div className="w-full max-w-6xl space-y-6 pb-12 text-white">
@@ -43,12 +52,24 @@ export function DomainsPage({ orgSlug }: { orgSlug: string }) {
           Stable hostnames for previews and production-like callbacks.
         </p>
       </header>
+
+      <DomainLimitWarning
+        isAtLimit={isAtLimit}
+        domainLimit={domainLimit}
+        currentPlan={planKey}
+        orgSlug={orgSlug}
+      />
+
       <section className="mt-8 rounded-2xl border border-indigo-300/20 bg-indigo-300/[0.04] p-6">
         <h2 className="text-lg font-medium">Connect a domain</h2>
         <form
           className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto]"
           onSubmit={(event) => {
             event.preventDefault();
+            if (isAtLimit) {
+              setIsLimitModalOpen(true);
+              return;
+            }
             mutations.create.mutate({ hostname, verificationMethod: 'dns' });
           }}
         >
@@ -144,6 +165,21 @@ export function DomainsPage({ orgSlug }: { orgSlug: string }) {
           </p>
         )}
       </section>
+
+      <LimitModal
+        isOpen={isLimitModalOpen}
+        onClose={() => setIsLimitModalOpen(false)}
+        title="Custom domain limit reached"
+        description={
+          domainLimit === 0
+            ? 'Custom domains are available on paid plans. Upgrade your workspace to connect your own domain.'
+            : `Your ${planKey} plan includes ${domainLimit} custom domain${domainLimit === 1 ? '' : 's'}. Upgrade to connect another address.`
+        }
+        limit={domainLimit}
+        currentPlan={planKey}
+        resourceName="Custom Domain"
+        orgSlug={orgSlug}
+      />
     </div>
   );
 }

@@ -1,8 +1,11 @@
+import { HOSTED_PLAN_LIMITS, resolveHostedPlan } from '@outpipe/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { CirclePlus, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import { LimitModal } from '#/components/feedback';
 import { Button } from '#/components/ui/button';
+import { useBilling } from '#/features/billing/hooks/use-billing';
 import type { CreateTunnelRequest } from '#/interfaces/tunnel';
 import { TunnelCreateForm } from './components/tunnel-create-form';
 import { TunnelList } from './components/tunnel-list';
@@ -22,10 +25,15 @@ export function TunnelsPage({ orgSlug }: { orgSlug: string }) {
   const navigate = useNavigate();
 
   const [isCreating, setIsCreating] = useState(false);
+  const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
   const [request, setRequest] = useState<CreateTunnelRequest>(initialRequest);
 
   const { organization, organizationsQuery, tunnelsQuery } =
     useOrganizationTunnels(orgSlug);
+  const billingQuery = useBilling(organization?.id);
+  const planKey = resolveHostedPlan(billingQuery.data?.plan?.key);
+  const tunnelLimit = HOSTED_PLAN_LIMITS[planKey]?.maxTunnels ?? 2;
+  const isAtLimit = (tunnelsQuery.data?.length ?? 0) >= tunnelLimit;
 
   const createMutation = useMutation({
     mutationFn: () => createTunnel(organization?.id ?? '', request),
@@ -76,7 +84,13 @@ export function TunnelsPage({ orgSlug }: { orgSlug: string }) {
         <Button
           type="button"
           size="lg"
-          onClick={() => setIsCreating((value) => !value)}
+          onClick={() => {
+            if (!isCreating && isAtLimit) {
+              setIsLimitModalOpen(true);
+              return;
+            }
+            setIsCreating((value) => !value);
+          }}
           className="rounded-full bg-white px-5 text-black hover:bg-indigo-100"
         >
           <CirclePlus />
@@ -125,6 +139,17 @@ export function TunnelsPage({ orgSlug }: { orgSlug: string }) {
         </div>
         <TunnelList query={tunnelsQuery} orgSlug={orgSlug} />
       </section>
+
+      <LimitModal
+        isOpen={isLimitModalOpen}
+        onClose={() => setIsLimitModalOpen(false)}
+        title="Active tunnel limit reached"
+        description={`Your ${planKey} plan includes ${tunnelLimit} active tunnel${(tunnelLimit as number) === 1 ? '' : 's'}. Upgrade your workspace to create more endpoints.`}
+        limit={tunnelLimit}
+        currentPlan={planKey}
+        resourceName="Active Tunnel"
+        orgSlug={orgSlug}
+      />
     </div>
   );
 }
