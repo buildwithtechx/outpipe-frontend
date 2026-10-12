@@ -42,6 +42,6 @@ It communicates with Outpipe core relay and control planes via public HTTP APIs 
 
 - Read files before editing them.
 - Use targeted patches for edits.
-- Run `npm run fmt` before finishing a change session.
+- Run `npm run format:fix` before finishing a change session.
 - Run `npm run typecheck` and `npm test` to verify changes.
 - Do not commit or push unless explicitly requested.

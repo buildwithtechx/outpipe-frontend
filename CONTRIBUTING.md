@@ -35,7 +35,7 @@ npm run dev:desktop
 Run format, typecheck, and test suites:
 
 ```sh
-npm run fmt
+npm run format:fix
 npm run typecheck
 npm test
 npm run test:product-contracts
@@ -46,4 +46,4 @@ npm run test:product-contracts
 - Keep PRs focused on a single feature, bug fix, or visual update.
 - Ensure all type checks and test suites pass locally before submitting.
 - Avoid committing secrets, production API keys, or private tunnel identifiers.
-- Format all modified files with Biome (`npm run fmt`).
+- Format all modified files with Biome (`npm run format:fix`).

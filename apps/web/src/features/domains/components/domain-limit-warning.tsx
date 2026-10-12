@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { AlertTriangle, ArrowRight } from "lucide-react";
+import { Link } from '@tanstack/react-router';
+import { AlertTriangle, ArrowRight } from 'lucide-react';
 
 export interface DomainLimitWarningProps {
   isAtLimit: boolean;
@@ -20,7 +20,7 @@ export function DomainLimitWarning({
 
   const planName =
     currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1).toLowerCase();
-  const domainLabel = domainLimit === 1 ? "domain" : "domains";
+  const domainLabel = domainLimit === 1 ? 'domain' : 'domains';
 
   return (
     <aside
@@ -36,15 +36,15 @@ export function DomainLimitWarning({
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <p className="text-xs font-medium text-zinc-200">
               {domainLimit === 0
-                ? "Custom domains are available on a paid plan"
-                : "Custom domain limit reached"}
+                ? 'Custom domains are available on a paid plan'
+                : 'Custom domain limit reached'}
             </p>
             <span className="text-[10px] text-zinc-600" aria-hidden="true">
               /
             </span>
             <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-amber-300/80">
               {domainLimit === 0
-                ? "Upgrade required"
+                ? 'Upgrade required'
                 : `${domainLimit} of ${domainLimit} used`}
             </span>
           </div>
@@ -52,7 +52,7 @@ export function DomainLimitWarning({
             {instanceOwned
               ? `This installation allows ${domainLimit} custom ${domainLabel}. Contact your administrator to increase capacity.`
               : domainLimit === 0
-                ? "Upgrade to connect your own tunnel address."
+                ? 'Upgrade to connect your own tunnel address.'
                 : `Your ${planName} plan includes ${domainLimit} custom ${domainLabel}. Upgrade to connect another address.`}
           </p>
         </div>

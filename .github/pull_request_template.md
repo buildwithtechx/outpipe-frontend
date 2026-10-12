@@ -17,7 +17,7 @@ Describe what changed and why.
 
 ## Verification
 
-- [ ] `npm run fmt`
+- [ ] `npm run format:fix`
 - [ ] Relevant tests run
 - [ ] Security implications reviewed
 - [ ] Documentation updated

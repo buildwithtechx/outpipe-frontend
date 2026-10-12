@@ -31,7 +31,7 @@ npm run typecheck
 npm test
 
 # Format code with Biome
-npm run fmt
+npm run format:fix
 ```
 
 ## Backend API

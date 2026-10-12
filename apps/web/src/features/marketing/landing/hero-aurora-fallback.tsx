@@ -1,4 +1,4 @@
-export function HeroAuroraFallback({ id = "hero" }: { id?: string }) {
+export function HeroAuroraFallback({ id = 'hero' }: { id?: string }) {
   return (
     <svg
       className="pointer-events-none absolute right-0 top-0 h-200 w-250 max-w-none opacity-40"

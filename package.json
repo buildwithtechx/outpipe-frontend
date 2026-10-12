@@ -25,7 +25,6 @@
     "typecheck": "npm run generate-routes && tsc --noEmit -p apps/web/tsconfig.json",
     "test": "vitest run",
     "test:product-contracts": "vitest run apps/status/src/api.test.ts apps/web/src/features/observability/services/observability-response.test.ts apps/web/src/features/tunnels/lib/tunnel-command.test.ts apps/web/src/features/uptime/lib/status-page-settings.test.ts apps/web/src/components/navigation/workspace-products.test.ts packages/shared/index.test.ts",
-    "fmt": "biome check --write apps packages",
     "format": "biome check apps packages",
     "format:fix": "biome check --write apps packages"
   },

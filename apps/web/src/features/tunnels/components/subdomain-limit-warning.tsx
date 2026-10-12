@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { AlertTriangle, ArrowRight } from "lucide-react";
+import { Link } from '@tanstack/react-router';
+import { AlertTriangle, ArrowRight } from 'lucide-react';
 
 export interface SubdomainLimitWarningProps {
   isAtLimit: boolean;
@@ -20,7 +20,7 @@ export function SubdomainLimitWarning({
 
   const planName =
     currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1).toLowerCase();
-  const subdomainLabel = subdomainLimit === 1 ? "subdomain" : "subdomains";
+  const subdomainLabel = subdomainLimit === 1 ? 'subdomain' : 'subdomains';
 
   return (
     <aside
