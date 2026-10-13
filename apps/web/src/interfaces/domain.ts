@@ -7,12 +7,14 @@ export type DomainStatus =
   | 'failed'
   | 'revoked';
 
+export type DomainVerificationMethod = 'dns' | 'http' | 'dns-automation';
+
 export type Domain = Entity & {
   organizationId: string;
   tunnelId?: string;
   hostname: string;
   status: DomainStatus;
-  verificationMethod: string;
+  verificationMethod: DomainVerificationMethod;
   verifiedAt?: string;
   certificateStatus: string;
   certificateExpiresAt?: string;

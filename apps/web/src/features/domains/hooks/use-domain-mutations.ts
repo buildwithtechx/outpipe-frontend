@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createDomain, verifyDomain } from '../services/domain-service';
+import type { DomainVerificationMethod } from '#/interfaces/domain';
+import {
+  createDomain,
+  deleteDomain,
+  verifyDomain,
+} from '../services/domain-service';
 
 export function useDomainMutations(organizationId: string | undefined) {
   const queryClient = useQueryClient();
@@ -8,16 +13,23 @@ export function useDomainMutations(organizationId: string | undefined) {
     queryClient.invalidateQueries({ queryKey: ['domains', organizationId] });
 
   const create = useMutation({
-    mutationFn: (input: { hostname: string; verificationMethod: string }) =>
-      createDomain(organizationId ?? '', input),
+    mutationFn: (input: {
+      hostname: string;
+      verificationMethod: DomainVerificationMethod;
+    }) => createDomain(organizationId ?? '', input),
     onSuccess: invalidate,
   });
 
   const verify = useMutation({
-    mutationFn: (input: { domainId: string; token: string }) =>
+    mutationFn: (input: { domainId: string; token?: string }) =>
       verifyDomain(input.domainId, input.token),
     onSuccess: invalidate,
   });
 
-  return { create, verify };
+  const remove = useMutation({
+    mutationFn: (domainId: string) => deleteDomain(domainId),
+    onSuccess: invalidate,
+  });
+
+  return { create, verify, remove };
 }

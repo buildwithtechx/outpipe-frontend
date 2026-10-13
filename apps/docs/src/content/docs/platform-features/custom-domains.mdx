@@ -7,37 +7,48 @@ Outpipe allows you to serve tunnels from your own branded domain names (e.g., `a
 
 ## Adding a Custom Domain
 
-1. In the **Outpipe Dashboard**, navigate to **Domains** and click **+ Add Domain**.
+1. In the **Outpipe Dashboard**, navigate to **Domains**.
 2. Enter your fully qualified domain name (e.g., `api.example.com`).
-3. Outpipe generates unique verification records for your domain.
+3. Choose a verification method: **DNS TXT**, **HTTP**, or **DNS automated**.
+4. Outpipe generates a unique verification token for your domain.
 
-## DNS Verification
+## Manual Verification
 
-You can verify ownership using either **CNAME** or **TXT** records in your DNS provider (Cloudflare, Route53, Namecheap, etc.):
+### DNS TXT Record
 
-### Option A: CNAME Record (Recommended)
-Point your subdomain directly to the Outpipe relay hostname:
-- **Type**: `CNAME`
-- **Name**: `api` (or your subdomain)
-- **Target**: `cname.outpipe.app`
+Add a TXT record proving ownership:
 
-### Option B: TXT Verification Record
-Add a TXT record to prove ownership before pointing traffic:
 - **Type**: `TXT`
-- **Name**: `_outpipe-challenge.api.example.com`
-- **Value**: `outpipe-verify=<verification_token>`
+- **Name**: `_outpipe-challenge.api.example.com` (shown as `_outpipe-challenge.<hostname>` in the dashboard)
+- **Value**: the verification token shown after creating the domain
 
-## Automated SSL/TLS Certificates (Let's Encrypt)
+Then click **Verify** next to the domain and enter the token.
 
-Once verified, Outpipe automatically provisions and manages free SSL/TLS certificates via Let's Encrypt (ACME). 
+### HTTP Verification
 
-- **Automatic Renewal**: Certificates are renewed in the background 30 days before expiration.
-- **Zero-Downtime Reloads**: The relay dynamically reloads certificates in memory without dropping active WebSocket or HTTP tunnel connections.
+Create the domain with the **HTTP** verification method, serve the challenge file at the requested path on your domain, then click **Verify**.
 
-## Connecting with the CLI
+## Automated DNS Verification
 
-Once your domain is active and verified, start your tunnel specifying your managed tunnel ID or custom subdomain:
+For hands-free verification, connect a DNS provider first:
 
-```sh
-outpipe http --port 3000 --tunnel-id <your_tunnel_id>
-```
+1. In the **DNS automation** section, select **Cloudflare**.
+2. Paste a Cloudflare API token with the **Zone DNS edit** scope, plus a label, and click **Connect provider**.
+3. Create the domain with the **DNS automated** verification method.
+
+Outpipe publishes the `_outpipe-challenge.<hostname>` TXT record through the provider automatically, then verifies the domain. Provider tokens are write-only: the API never returns the raw token, and the dashboard only shows a masked suffix (`…lastFour`). Disconnect a credential at any time to revoke it.
+
+### Wildcard Domains
+
+Wildcard hostnames such as `*.example.com` require the **DNS automated** method — manual TXT and HTTP verification do not cover wildcards. Connect a Cloudflare token first, then create the wildcard domain.
+
+## Automated SSL/TLS Certificates
+
+Once verified, Outpipe automatically provisions and manages SSL/TLS certificates for the domain.
+
+- **Automatic Renewal**: Certificates are renewed server-side starting 30 days before expiration.
+- **Expiry Visibility**: The dashboard shows each domain's certificate expiry date.
+
+## Removing a Domain
+
+Click **Delete** next to a domain to remove it. Deleting a domain does not disconnect your DNS provider credentials.
