@@ -1,4 +1,6 @@
 import type {
+  StatusPageSubscriber,
+  SubscriberListResult,
   UptimeCheck,
   UptimeIncident,
   UptimeIncidentUpdate,
@@ -8,6 +10,8 @@ import type {
 import { apiClient } from '#/lib/api-client';
 
 export type {
+  StatusPageSubscriber,
+  SubscriberListResult,
   UptimeCheck,
   UptimeIncident,
   UptimeIncidentUpdate,
@@ -108,9 +112,12 @@ export function updateIncident(
 
 export function getStatusPageConfig(organizationId: string) {
   return apiClient
-    .get<Omit<UptimeStatusPage, 'isPublic'> & { published: boolean }>(
-      `/api/v1/organizations/${organizationId}/uptime/status-page`,
-    )
+    .get<
+      Omit<UptimeStatusPage, 'isPublic' | 'subscriptionsEnabled'> & {
+        published: boolean;
+        subscriptionsEnabled: boolean;
+      }
+    >(`/api/v1/organizations/${organizationId}/uptime/status-page`)
     .then((page) => ({ ...page, isPublic: page.published }));
 }
 
@@ -125,15 +132,69 @@ export function updateStatusPageConfig(
   },
 ) {
   return apiClient
-    .post<Omit<UptimeStatusPage, 'isPublic'> & { published: boolean }>(
-      `/api/v1/organizations/${organizationId}/uptime/status-page`,
-      {
-        slug: input.slug,
-        title: input.title,
-        description: input.description,
-        published: input.is_public,
-        customDomain: input.customDomain,
-      },
-    )
+    .post<
+      Omit<UptimeStatusPage, 'isPublic' | 'subscriptionsEnabled'> & {
+        published: boolean;
+        subscriptionsEnabled: boolean;
+      }
+    >(`/api/v1/organizations/${organizationId}/uptime/status-page`, {
+      slug: input.slug,
+      title: input.title,
+      description: input.description,
+      published: input.is_public,
+      customDomain: input.customDomain,
+    })
     .then((page) => ({ ...page, isPublic: page.published }));
+}
+
+export function listSubscribers(
+  organizationId: string,
+  input?: { q?: string; status?: string; limit?: number; cursor?: string },
+) {
+  const params = new URLSearchParams();
+  if (input?.q) params.set('q', input.q);
+  if (input?.status) params.set('status', input.status);
+  if (input?.limit) params.set('limit', String(input.limit));
+  if (input?.cursor) params.set('cursor', input.cursor);
+  const query = params.toString();
+  return apiClient.get<SubscriberListResult>(
+    `/api/v1/organizations/${organizationId}/uptime/status-page/subscribers${query ? `?${query}` : ''}`,
+  );
+}
+
+export function setSubscriptionsEnabled(
+  organizationId: string,
+  enabled: boolean,
+) {
+  return apiClient.patch<{ subscriptionsEnabled: boolean }>(
+    `/api/v1/organizations/${organizationId}/uptime/status-page/subscriptions`,
+    { subscriptionsEnabled: enabled },
+  );
+}
+
+export function removeSubscriber(organizationId: string, subscriberId: string) {
+  return apiClient.delete<void>(
+    `/api/v1/organizations/${organizationId}/uptime/status-page/subscribers/${subscriberId}`,
+  );
+}
+
+export function managerUnsubscribe(
+  organizationId: string,
+  subscriberId: string,
+) {
+  return apiClient.post<StatusPageSubscriber>(
+    `/api/v1/organizations/${organizationId}/uptime/status-page/subscribers/${subscriberId}/unsubscribe`,
+    {},
+  );
+}
+
+export function setSubscriberScope(
+  organizationId: string,
+  subscriberId: string,
+  componentIds: string[],
+) {
+  return apiClient.put<StatusPageSubscriber>(
+    `/api/v1/organizations/${organizationId}/uptime/status-page/subscribers/${subscriberId}/scope`,
+    { componentIds },
+  );
 }

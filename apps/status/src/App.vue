@@ -9,6 +9,8 @@ import SystemBanner from './components/system-banner.vue';
 import MonitorCard from './components/monitor-card.vue';
 import IncidentTimeline from './components/incident-timeline.vue';
 import SubscribeModal from './components/subscribe-modal.vue';
+import ConfirmPage from './components/confirm-page.vue';
+import UnsubscribePage from './components/unsubscribe-page.vue';
 
 const statusData = ref<StatusPageData | null>(null);
 const isLoading = ref(true);
@@ -17,6 +19,9 @@ const isSubscribeOpen = ref(false);
 const slug = ref('default');
 const pageState = ref<'ready' | 'not-found' | 'unavailable'>('unavailable');
 const siteUrl = publicSiteUrl(import.meta.env.DEV, import.meta.env.VITE_PUBLIC_SITE_URL);
+const tokenAction = ref<'confirm' | 'unsubscribe' | null>(null);
+const token = ref('');
+const canSubscribe = ref(false);
 let icon: HTMLLinkElement | null = null;
 let timer: ReturnType<typeof setTimeout> | null = null;
 let disposed = false;
@@ -25,13 +30,23 @@ async function loadData() {
   if (isRefreshing.value) return;
   isRefreshing.value = true;
   const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const params = new URLSearchParams(window.location.search);
   slug.value = (pathParts[0] === 'status' ? pathParts[1] : pathParts[0]) || 'default';
+  const action = pathParts[0] === 'status' ? pathParts[2] : pathParts[1];
+  if (action === 'confirm' || action === 'unsubscribe') {
+    tokenAction.value = action;
+    token.value = params.get('token') ?? '';
+    isLoading.value = false;
+    isRefreshing.value = false;
+    return;
+  }
   if (timer) clearTimeout(timer);
   const result = await fetchStatusResult(slug.value);
   if (disposed) return;
   isRefreshing.value = false;
   pageState.value = result.state;
   statusData.value = result.state === 'ready' ? result.data : null;
+  canSubscribe.value = result.state === 'ready' && result.data.subscriptionsEnabled;
   isLoading.value = false;
   if (result.state !== 'not-found') timer = setTimeout(loadData, 30000);
 }
@@ -54,8 +69,11 @@ onUnmounted(() => {
 
 <template>
   <div class="status-app">
-    <StatusHeader :can-subscribe="Boolean(statusData)" @open-subscribe="isSubscribeOpen = true" />
+    <StatusHeader :can-subscribe="canSubscribe" @open-subscribe="isSubscribeOpen = true" />
     <main class="status-container status-main">
+      <ConfirmPage v-if="tokenAction === 'confirm'" :slug="slug" :token="token" />
+      <UnsubscribePage v-else-if="tokenAction === 'unsubscribe'" :slug="slug" :token="token" />
+      <template v-else>
       <section class="product-intro" aria-labelledby="status-title">
         <p class="product-eyebrow">Outpipe status</p>
         <h1 id="status-title">{{ statusData?.title || 'Service status' }}</h1>
@@ -82,7 +100,7 @@ onUnmounted(() => {
       </div>
 
       <SubscribeModal
-        v-if="isSubscribeOpen"
+        v-if="isSubscribeOpen && !tokenAction"
         :slug="slug"
         @close="isSubscribeOpen = false"
       />
@@ -93,6 +111,7 @@ onUnmounted(() => {
       <p v-else>We could not load the latest service status. Try again in a moment.</p>
       <button type="button" class="btn-subscribe" :disabled="isRefreshing" @click="loadData">{{ isRefreshing ? 'Checking...' : 'Check again' }}</button>
     </section>
+      </template>
     </main>
     <footer class="product-footer">
       <p>Service availability, powered by Outpipe.</p>

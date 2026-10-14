@@ -7,6 +7,11 @@ import {
   getMonitorChecks,
   getMonitors,
   getStatusPageConfig,
+  listSubscribers,
+  managerUnsubscribe,
+  removeSubscriber,
+  setSubscriberScope,
+  setSubscriptionsEnabled,
   testMonitor,
   updateIncident,
   updateStatusPageConfig,
@@ -45,6 +50,65 @@ export function useStatusPageConfig(organizationId?: string) {
     queryFn: () => getStatusPageConfig(organizationId as string),
     enabled: Boolean(organizationId),
   });
+}
+
+export function useSubscribers(
+  organizationId?: string,
+  input?: { q?: string; status?: string },
+) {
+  return useQuery({
+    queryKey: [
+      'uptime-subscribers',
+      organizationId,
+      input?.q ?? '',
+      input?.status ?? 'all',
+    ],
+    queryFn: () =>
+      listSubscribers(organizationId as string, { ...input, limit: 50 }),
+    enabled: Boolean(organizationId),
+  });
+}
+
+export function useSubscriberMutations(organizationId: string) {
+  const queryClient = useQueryClient();
+  const invalidate = () =>
+    queryClient.invalidateQueries({ queryKey: ['uptime-subscribers'] });
+
+  const toggleSubscriptions = useMutation({
+    mutationFn: (enabled: boolean) =>
+      setSubscriptionsEnabled(organizationId, enabled),
+    onSuccess: () => {
+      void invalidate();
+      void queryClient.invalidateQueries({
+        queryKey: ['uptime-status-page', organizationId],
+      });
+    },
+  });
+
+  const unsubscribe = useMutation({
+    mutationFn: (subscriberId: string) =>
+      managerUnsubscribe(organizationId, subscriberId),
+    onSuccess: () => invalidate(),
+  });
+
+  const remove = useMutation({
+    mutationFn: (subscriberId: string) =>
+      removeSubscriber(organizationId, subscriberId),
+    onSuccess: () => invalidate(),
+  });
+
+  const setScope = useMutation({
+    mutationFn: ({
+      subscriberId,
+      componentIds,
+    }: {
+      subscriberId: string;
+      componentIds: string[];
+    }) => setSubscriberScope(organizationId, subscriberId, componentIds),
+    onSuccess: () => invalidate(),
+  });
+
+  return { toggleSubscriptions, unsubscribe, remove, setScope };
 }
 
 export function useUptimeMutations(organizationId: string) {

@@ -1,9 +1,11 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import {
+  confirmSubscription,
   fetchStatusData,
   fetchStatusResult,
   mapStatusResponse,
   subscribeToStatus,
+  unsubscribeWithToken,
 } from './api';
 
 afterEach(() => vi.unstubAllGlobals());
@@ -75,6 +77,28 @@ it('subscribes email using the server contract and refuses webhooks', async () =
     expect.objectContaining({
       method: 'POST',
       body: JSON.stringify({ email: 'user@example.com' }),
+    }),
+  );
+});
+
+it('confirms and unsubscribes with single-use tokens', async () => {
+  const fetch = vi
+    .fn()
+    .mockResolvedValueOnce({ ok: true })
+    .mockResolvedValueOnce({ ok: false, status: 410 })
+    .mockResolvedValueOnce({ ok: true });
+  vi.stubGlobal('fetch', fetch);
+  expect(await confirmSubscription('team', 'confirm-token')).toBe('confirmed');
+  expect(await confirmSubscription('team', 'used-token')).toBe('invalid');
+  expect(await unsubscribeWithToken('team', 'leave-token')).toBe(
+    'unsubscribed',
+  );
+  expect(fetch).toHaveBeenNthCalledWith(
+    1,
+    expect.stringContaining('/status/team/confirm'),
+    expect.objectContaining({
+      method: 'POST',
+      body: JSON.stringify({ token: 'confirm-token' }),
     }),
   );
 });

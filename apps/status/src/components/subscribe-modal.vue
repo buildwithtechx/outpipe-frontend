@@ -62,9 +62,9 @@ async function handleSubmit() {
             <polyline points="20 6 9 17 4 12" />
           </svg>
         </div>
-        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Subscribed!</h3>
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Check your inbox</h3>
         <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-          You will now receive automated updates for Outpipe services.
+          We sent a confirmation link to {{ target }}. Confirm within 24 hours to receive incident updates.
         </p>
         <button type="button" class="btn-subscribe" style="width: 100%; justify-content: center;" @click="emit('close')">
           Done

@@ -16,7 +16,11 @@ export interface RawStatusResponse {
     | 'degraded_performance'
     | 'partial_outage'
     | 'major_outage';
-  page: { title: string; description?: string };
+  page: {
+    title: string;
+    description?: string;
+    subscriptionsEnabled?: boolean;
+  };
   monitors: RawMonitor[] | null;
   activeIncidents: StatusIncident[] | null;
   pastIncidents: StatusIncident[] | null;
@@ -47,6 +51,7 @@ export function mapStatusResponse(data: RawStatusResponse): StatusPageData {
   return {
     title: data.page.title,
     description: data.page.description ?? '',
+    subscriptionsEnabled: data.page.subscriptionsEnabled !== false,
     systemStatus,
     systemStatusMessage:
       data.overallStatus === 'partial_outage'
@@ -110,5 +115,45 @@ export async function subscribeToStatus(
     return response.ok;
   } catch {
     return false;
+  }
+}
+
+export type TokenResult = 'confirmed' | 'unsubscribed' | 'invalid' | 'error';
+
+export async function confirmSubscription(
+  slug: string,
+  token: string,
+): Promise<TokenResult> {
+  return postStatusToken(slug, 'confirm', token, 'confirmed');
+}
+
+export async function unsubscribeWithToken(
+  slug: string,
+  token: string,
+): Promise<TokenResult> {
+  return postStatusToken(slug, 'unsubscribe', token, 'unsubscribed');
+}
+
+async function postStatusToken(
+  slug: string,
+  action: 'confirm' | 'unsubscribe',
+  token: string,
+  okState: TokenResult,
+): Promise<TokenResult> {
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  try {
+    const response = await fetch(
+      `${apiUrl}/api/v1/status/${encodeURIComponent(slug)}/${action}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      },
+    );
+    if (response.ok) return okState;
+    if (response.status === 410 || response.status === 400) return 'invalid';
+    return 'error';
+  } catch {
+    return 'error';
   }
 }

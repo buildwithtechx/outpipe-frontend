@@ -76,6 +76,17 @@ a {
 .status-empty h2 { margin-bottom: 0.75rem; font-size: 1.5rem; }
 .status-empty p { margin-bottom: 1.5rem; color: var(--text-secondary); }
 
+.status-token-page {
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.status-token-page h1 { margin-bottom: 0.75rem; font-size: 1.5rem; }
+.status-token-page p { color: var(--text-secondary); }
+
 .btn-subscribe {
   display: inline-flex;
   align-items: center;

@@ -20,6 +20,7 @@ import {
   validStatusSlug,
 } from './lib/status-page-settings';
 import { StatusPagePublishing } from './status-page-publishing';
+import { SubscribersSettings } from './subscribers-settings';
 
 export function StatusPageEditor({ orgSlug }: { orgSlug: string }) {
   const organizationQuery = useOrganization(orgSlug);
@@ -169,6 +170,7 @@ export function StatusPageEditor({ orgSlug }: { orgSlug: string }) {
           >
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="services">Services</TabsTrigger>
+            <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
             <TabsTrigger value="preview">Preview</TabsTrigger>
             <TabsTrigger value="publishing">Publishing & domain</TabsTrigger>
           </TabsList>
@@ -242,6 +244,13 @@ export function StatusPageEditor({ orgSlug }: { orgSlug: string }) {
             >
               Manage monitors and incidents
             </Link>
+          </TabsContent>
+          <TabsContent value="subscribers">
+            {orgId ? (
+              <SubscribersSettings orgId={orgId} />
+            ) : (
+              <p role="status">Loading workspace…</p>
+            )}
           </TabsContent>
           <TabsContent value="preview">
             <section

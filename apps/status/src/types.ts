@@ -44,6 +44,7 @@ export interface StatusIncident {
 export interface StatusPageData {
   title: string;
   description: string;
+  subscriptionsEnabled: boolean;
   systemStatus: 'operational' | 'degraded' | 'outage';
   systemStatusMessage: string;
   monitors: StatusMonitor[];
