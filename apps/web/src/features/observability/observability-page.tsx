@@ -8,6 +8,7 @@ import { WorkspaceAnalytics } from '#/features/organizations/components/workspac
 import { useOrganization } from '#/features/organizations/hooks/use-organization';
 import type { RequestCapture } from '#/interfaces';
 import { LogStream } from './components/log-stream';
+import { PipelineHealthSection } from './components/pipeline-health-section';
 import { ReplayDialog } from './components/replay-dialog';
 import { RequestInspectorModal } from './components/request-inspector-modal';
 import { TraceWaterfall } from './components/trace-waterfall';
@@ -95,6 +96,8 @@ export function ObservabilityPage({ orgSlug }: { orgSlug: string }) {
       </div>
 
       <WorkspaceAnalytics organizationId={orgId} />
+
+      <PipelineHealthSection orgId={orgId} />
 
       {selectedTraceId && (
         <QueryFeedback query={waterfallQuery} label="trace waterfall">

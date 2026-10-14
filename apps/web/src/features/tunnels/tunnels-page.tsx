@@ -1,6 +1,6 @@
 import { HOSTED_PLAN_LIMITS, resolveHostedPlan } from '@outpipe/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { CirclePlus, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { LimitModal } from '#/components/feedback';
@@ -81,21 +81,28 @@ export function TunnelsPage({ orgSlug }: { orgSlug: string }) {
             workspace shares.
           </p>
         </div>
-        <Button
-          type="button"
-          size="lg"
-          onClick={() => {
-            if (!isCreating && isAtLimit) {
-              setIsLimitModalOpen(true);
-              return;
-            }
-            setIsCreating((value) => !value);
-          }}
-          className="rounded-full bg-white px-5 text-black hover:bg-indigo-100"
-        >
-          <CirclePlus />
-          {isCreating ? 'Close form' : 'New tunnel'}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button asChild variant="outline" size="lg" className="rounded-full">
+            <Link to="/$orgSlug/tunnels/fleets" params={{ orgSlug }}>
+              Machine fleets
+            </Link>
+          </Button>
+          <Button
+            type="button"
+            size="lg"
+            onClick={() => {
+              if (!isCreating && isAtLimit) {
+                setIsLimitModalOpen(true);
+                return;
+              }
+              setIsCreating((value) => !value);
+            }}
+            className="rounded-full bg-white px-5 text-black hover:bg-indigo-100"
+          >
+            <CirclePlus />
+            {isCreating ? 'Close form' : 'New tunnel'}
+          </Button>
+        </div>
       </header>
 
       {isCreating && (
