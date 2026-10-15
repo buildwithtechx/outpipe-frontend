@@ -17,10 +17,27 @@ export function createDomain(
     hostname: string;
     verificationMethod: DomainVerificationMethod;
     tunnelId?: string;
+    dnsProvider?: string;
   },
 ) {
   return apiClient.post<{ domain: Domain; verificationToken: string }>(
     `/api/v1/organizations/${organizationId}/domains`,
+    input,
+  );
+}
+
+export function createDomainBundle(
+  organizationId: string,
+  input: {
+    hostname: string;
+    tunnelId?: string;
+    dnsProvider?: string;
+    wildcard: boolean;
+    delegated: boolean;
+  },
+) {
+  return apiClient.post<Domain[]>(
+    `/api/v1/organizations/${organizationId}/domains/bundle`,
     input,
   );
 }

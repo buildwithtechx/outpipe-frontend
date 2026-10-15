@@ -62,6 +62,7 @@ export function DomainsPage({ orgSlug }: { orgSlug: string }) {
 
       <ConnectDomainForm
         create={mutations.create}
+        createBundle={mutations.createBundle}
         isAtLimit={isAtLimit}
         onLimitReached={() => setIsLimitModalOpen(true)}
       />

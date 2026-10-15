@@ -13,6 +13,16 @@ export function DomainList({
   verify: Mutations['verify'];
   remove: Mutations['remove'];
 }) {
+  const bundleCounts = new Map<string, number>();
+  for (const domain of domains) {
+    if (domain.bundleGroup) {
+      bundleCounts.set(
+        domain.bundleGroup,
+        (bundleCounts.get(domain.bundleGroup) ?? 0) + 1,
+      );
+    }
+  }
+
   return (
     <section className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
       {domains.length ? (
@@ -22,6 +32,11 @@ export function DomainList({
             domain={domain}
             verify={verify}
             remove={remove}
+            bundleSize={
+              domain.bundleGroup
+                ? bundleCounts.get(domain.bundleGroup)
+                : undefined
+            }
           />
         ))
       ) : (

@@ -9,7 +9,7 @@ Outpipe allows you to serve tunnels from your own branded domain names (e.g., `a
 
 1. In the **Outpipe Dashboard**, navigate to **Domains**.
 2. Enter your fully qualified domain name (e.g., `api.example.com`).
-3. Choose a verification method: **DNS TXT**, **HTTP**, or **DNS automated**.
+3. Choose a verification method: **DNS TXT**, **HTTP**, **DNS automated**, or **DNS delegation**.
 4. Outpipe generates a unique verification token for your domain.
 
 ## Manual Verification
@@ -32,15 +32,62 @@ Create the domain with the **HTTP** verification method, serve the challenge fil
 
 For hands-free verification, connect a DNS provider first:
 
-1. In the **DNS automation** section, select **Cloudflare**.
-2. Paste a Cloudflare API token with the **Zone DNS edit** scope, plus a label, and click **Connect provider**.
+1. In the **DNS automation** section, select a provider.
+2. Paste the credential plus a label, and click **Connect provider**.
 3. Create the domain with the **DNS automated** verification method.
 
-Outpipe publishes the `_outpipe-challenge.<hostname>` TXT record through the provider automatically, then verifies the domain. Provider tokens are write-only: the API never returns the raw token, and the dashboard only shows a masked suffix (`…lastFour`). Disconnect a credential at any time to revoke it.
+Outpipe publishes the `_outpipe-challenge.<hostname>` TXT record through the provider automatically, then verifies the domain. Provider credentials are write-only: the API never returns the raw secret, and the dashboard only shows a masked suffix (`…lastFour`). Disconnect a credential at any time to revoke it.
+
+### Cloudflare
+
+Select **Cloudflare** and paste an API token with the **Zone DNS edit** scope.
+
+### Route53
+
+Select **Route53** and enter an AWS access key ID, secret access key, and optional session token (temporary credentials only).
+
+Use a least-privilege IAM policy scoped to the hosted zone:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["route53:ChangeResourceRecordSets"],
+      "Resource": ["arn:aws:route53:::hostedzone/ZONE_ID"]
+    }
+  ]
+}
+```
+
+Replace `ZONE_ID` with your hosted zone ID. The dashboard stores the keys as a single JSON credential (`access_key_id`, `secret_access_key`, optional `session_token`) and never displays them again.
 
 ### Wildcard Domains
 
-Wildcard hostnames such as `*.example.com` require the **DNS automated** method — manual TXT and HTTP verification do not cover wildcards. Connect a Cloudflare token first, then create the wildcard domain.
+Wildcard hostnames such as `*.example.com` require the **DNS automated** method — manual TXT and HTTP verification do not cover wildcards. Connect a Cloudflare or Route53 credential first, then create the wildcard domain.
+
+## Apex + Wildcard Bundles
+
+To cover both `example.com` and `*.example.com` with one certificate order, tick **Create apex + wildcard bundle** in the connect form. Outpipe calls `POST /api/v1/organizations/{orgID}/domains/bundle` with `{ hostname, wildcard: true, delegated, dnsProvider?, tunnelId? }` and returns 1–2 domains sharing one `bundleGroup`:
+
+- Without delegation, both rows use DNS automation through your connected provider.
+- With **CNAME delegation** ticked, both rows share one `delegationTarget` shown on each row; renewals stay grouped by `bundleGroup`.
+
+Domain rows in a bundle show a `bundle · 2` grouping hint.
+
+## CNAME Delegation (No API Token)
+
+If you cannot grant DNS API access, choose the **DNS delegation** verification method instead:
+
+1. Create the domain (or bundle) with delegation enabled.
+2. The dashboard shows a delegation target. Add this record at your DNS:
+   - **Type**: `CNAME`
+   - **Name**: `_acme-challenge.<host>` (strip any leading `*.`)
+   - **Value**: the delegation target shown (copy button included)
+3. Click **Verify now** next to the domain. No token is needed.
+
+Outpipe checks that `_acme-challenge.<host>` resolves to the challenge zone target, then issues the certificate from the server-held challenge zone. Keep the CNAME in place: automated renewals re-check delegation before reissuing. The challenge zone itself is carved out server-side (`OUTPIPE_CHALLENGE_ZONE` with its own DNS credential), so your zone only needs the single delegation CNAME.
 
 ## Automated SSL/TLS Certificates
 

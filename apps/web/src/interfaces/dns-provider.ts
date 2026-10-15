@@ -1,6 +1,6 @@
 import type { Entity } from '#/interfaces/api';
 
-export type DNSProviderName = 'cloudflare';
+export type DNSProviderName = 'cloudflare' | 'route53';
 
 export type DNSProviderCredential = Entity & {
   organizationId: string;

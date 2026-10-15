@@ -7,7 +7,11 @@ export type DomainStatus =
   | 'failed'
   | 'revoked';
 
-export type DomainVerificationMethod = 'dns' | 'http' | 'dns-automation';
+export type DomainVerificationMethod =
+  | 'dns'
+  | 'http'
+  | 'dns-automation'
+  | 'dns-delegation';
 
 export type Domain = Entity & {
   organizationId: string;
@@ -18,4 +22,7 @@ export type Domain = Entity & {
   verifiedAt?: string;
   certificateStatus: string;
   certificateExpiresAt?: string;
+  dnsProvider?: string;
+  bundleGroup?: string;
+  delegationTarget?: string;
 };

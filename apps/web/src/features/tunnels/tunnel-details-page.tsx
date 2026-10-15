@@ -4,6 +4,7 @@ import { Button } from '#/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs';
 import { ApiError } from '#/lib/api-client';
 import { TunnelCaptureControl } from './components/tunnel-capture-control';
+import { TunnelCapturePolicyEditor } from './components/tunnel-capture-policy-editor';
 import { TunnelConfigurationForm } from './components/tunnel-configuration-form';
 import { TunnelConnectGuide } from './components/tunnel-connect-guide';
 import { TunnelDetailActions } from './components/tunnel-detail-actions';
@@ -107,7 +108,10 @@ export function TunnelDetailsPage({
         >
           <TunnelConfigurationForm tunnel={tunnel} />
           {(tunnel.protocol === 'http' || tunnel.protocol === 'https') && (
-            <TunnelCaptureControl tunnel={tunnel} />
+            <>
+              <TunnelCaptureControl tunnel={tunnel} />
+              <TunnelCapturePolicyEditor tunnel={tunnel} />
+            </>
           )}
         </TabsContent>
       </Tabs>

@@ -1,3 +1,4 @@
+import type { CapturePolicy } from '#/interfaces/capture-policy';
 import type {
   CreateTunnelRequest,
   Tunnel,
@@ -38,6 +39,19 @@ export function setTunnelCapture(tunnelID: string, enabled: boolean) {
   return apiClient.patch<Tunnel>(
     `/api/v1/tunnels/${encodeURIComponent(tunnelID)}/capture`,
     { enabled },
+  );
+}
+
+export function getCapturePolicy(tunnelID: string) {
+  return apiClient.get<CapturePolicy>(
+    `/api/v1/tunnels/${encodeURIComponent(tunnelID)}/capture-policy`,
+  );
+}
+
+export function setCapturePolicy(tunnelID: string, rulesJson: string) {
+  return apiClient.patch<CapturePolicy>(
+    `/api/v1/tunnels/${encodeURIComponent(tunnelID)}/capture`,
+    { policy: { rules: rulesJson } },
   );
 }
 

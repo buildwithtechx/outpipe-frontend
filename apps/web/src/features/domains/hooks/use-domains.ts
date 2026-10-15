@@ -6,5 +6,6 @@ export function useDomains(organizationId?: string) {
     queryKey: ['domains', organizationId],
     queryFn: () => getDomains(organizationId as string),
     enabled: Boolean(organizationId),
+    refetchInterval: 15000,
   });
 }

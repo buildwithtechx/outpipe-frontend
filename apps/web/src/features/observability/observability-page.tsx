@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '#/components/ui/tabs';
 import { WorkspaceAnalytics } from '#/features/organizations/components/workspace-analytics';
 import { useOrganization } from '#/features/organizations/hooks/use-organization';
 import type { RequestCapture } from '#/interfaces';
+import { AlertSection } from './components/alert-section';
 import { LogStream } from './components/log-stream';
 import { PipelineHealthSection } from './components/pipeline-health-section';
 import { ReplayDialog } from './components/replay-dialog';
@@ -119,6 +120,9 @@ export function ObservabilityPage({ orgSlug }: { orgSlug: string }) {
           </TabsTrigger>
           <TabsTrigger value="captures" className="text-xs">
             Tunnel Request Captures ({captures.length})
+          </TabsTrigger>
+          <TabsTrigger value="alerts" className="text-xs">
+            Alerts
           </TabsTrigger>
         </TabsList>
 
@@ -271,6 +275,9 @@ export function ObservabilityPage({ orgSlug }: { orgSlug: string }) {
               )}
             </div>
           </QueryFeedback>
+        </TabsContent>
+        <TabsContent value="alerts" className="mt-0">
+          <AlertSection orgId={orgId} />
         </TabsContent>
       </Tabs>
 

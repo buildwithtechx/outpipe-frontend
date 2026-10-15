@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { DomainVerificationMethod } from '#/interfaces/domain';
 import {
   createDomain,
+  createDomainBundle,
   deleteDomain,
   verifyDomain,
 } from '../services/domain-service';
@@ -16,7 +17,20 @@ export function useDomainMutations(organizationId: string | undefined) {
     mutationFn: (input: {
       hostname: string;
       verificationMethod: DomainVerificationMethod;
+      tunnelId?: string;
+      dnsProvider?: string;
     }) => createDomain(organizationId ?? '', input),
+    onSuccess: invalidate,
+  });
+
+  const createBundle = useMutation({
+    mutationFn: (input: {
+      hostname: string;
+      tunnelId?: string;
+      dnsProvider?: string;
+      wildcard: boolean;
+      delegated: boolean;
+    }) => createDomainBundle(organizationId ?? '', input),
     onSuccess: invalidate,
   });
 
@@ -31,5 +45,5 @@ export function useDomainMutations(organizationId: string | undefined) {
     onSuccess: invalidate,
   });
 
-  return { create, verify, remove };
+  return { create, createBundle, verify, remove };
 }
