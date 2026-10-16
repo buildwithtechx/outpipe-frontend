@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Activity, ArrowRight, Code2, Terminal } from 'lucide-react';
 import { type KeyboardEvent, useId, useRef, useState } from 'react';
-import { SiExpress, SiNextdotjs, SiVite } from 'react-icons/si';
+import { SiExpress, SiHono, SiNextdotjs, SiVite } from 'react-icons/si';
 import { CopyButton } from './copy-button';
 import { HighlightedTunnelCode } from './tunnel-code-tokenizer';
 import styles from './tunnel-developer.module.css';
@@ -30,6 +30,14 @@ export const TUNNEL_PLUGINS = [
     install: 'npm install @outpipe/express',
     icon: SiExpress,
     code: 'import express from "express";\nimport outpipe from "@outpipe/express";\n\nconst app = express();\noutpipe(app, {\n  apiKey: process.env.OUTPIPE_API_KEY,\n});\napp.listen(3000);',
+  },
+  {
+    id: 'hono',
+    name: 'Hono',
+    file: 'server.ts',
+    install: 'npm install @outpipe/hono',
+    icon: SiHono,
+    code: 'import { Hono } from "hono";\nimport { createHonoTunnel, tunnelLifecycle } from "@outpipe/hono";\n\nconst app = new Hono();\nconst tunnel = createHonoTunnel({ localPort: 3000 });\napp.use("*", tunnelLifecycle(tunnel));',
   },
 ] as const;
 

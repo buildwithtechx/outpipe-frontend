@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import outpipeMark from '@outpipe/shared/outpipe.svg?url';
-import { publicSiteUrl } from '@outpipe/shared';
+import { publicDocsUrl, publicSiteUrl } from '@outpipe/shared';
 
 const siteUrl = publicSiteUrl(import.meta.env.DEV, import.meta.env.VITE_PUBLIC_SITE_URL);
+const docsUrl = publicDocsUrl(import.meta.env.DEV, import.meta.env.VITE_PUBLIC_DOCS_URL);
 
 defineProps<{
   canSubscribe: boolean;
@@ -23,7 +24,7 @@ const emit = defineEmits<{
       </a>
       <div class="product-header-actions">
         <nav class="product-nav" aria-label="Product navigation">
-          <a :href="`${siteUrl}/docs`">Docs</a>
+          <a :href="docsUrl">Docs</a>
           <a :href="`${siteUrl}/contact`">Support</a>
         </nav>
         <button

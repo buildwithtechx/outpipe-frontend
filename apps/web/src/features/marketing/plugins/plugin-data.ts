@@ -2,12 +2,14 @@ import { Cable, Route, Zap } from 'lucide-react';
 import {
   SiAngular,
   SiAstro,
+  SiBun,
   SiCakephp,
   SiDrizzle,
   SiExpress,
   SiGin,
   SiGo,
   SiGraphql,
+  SiHono,
   SiLaravel,
   SiMongodb,
   SiNestjs,
@@ -27,6 +29,7 @@ import {
   SiSwagger,
   SiSymfony,
   SiTailwindcss,
+  SiTanstack,
   SiTrpc,
   SiTypescript,
   SiVercel,
@@ -44,7 +47,10 @@ export type PluginId =
   | 'go'
   | 'rust'
   | 'php'
-  | 'angular';
+  | 'angular'
+  | 'hono'
+  | 'tanstack'
+  | 'tanstack-start';
 
 export type PluginDefinition = {
   id: PluginId;
@@ -410,8 +416,85 @@ export const pluginDefinitions: PluginDefinition[] = [
       'Set up the provider once, then use the injectable service for tunnel operations throughout your app.',
     technologies: [{ label: 'Angular', icon: SiAngular }, typescript],
   },
+  {
+    id: 'hono',
+    name: 'Hono',
+    packageName: '@outpipe/hono',
+    eyebrow: 'Hono integration',
+    headline: 'Expose your Hono API\nin seconds.',
+    description:
+      'Lightweight middleware and tunnel lifecycle helpers for Hono applications on Node.js, Bun, or edge runtimes.',
+    docsSlug: 'hono',
+    install: 'npm install @outpipe/hono',
+    fileName: 'server.ts',
+    code: "import { Hono } from 'hono';\nimport { createHonoTunnel, tunnelLifecycle, tunnelStatus } from '@outpipe/hono';\n\nconst app = new Hono();\nconst tunnel = createHonoTunnel({ localPort: 3000 });\n\napp.use('*', tunnelLifecycle(tunnel));\napp.get('/_tunnel', tunnelStatus(tunnel));\napp.get('/', (c) => c.text('Hello from Outpipe!'));\n\nexport default app;",
+    colorClass: 'text-amber-400',
+    icon: SiHono,
+    features: [
+      'Lightweight middleware',
+      'Node.js and Bun support',
+      'Status endpoint helper',
+      'Automatic tunnel lifecycle',
+    ],
+    useCases: [
+      'Webhook callback testing',
+      'Fast edge API prototyping',
+      'Microservice previews',
+    ],
+    stackDescription:
+      'Connect lightweight Hono APIs and microservices directly to Outpipe without extra reverse proxies.',
+    integrationHeading: 'Deploy and test Hono APIs\nwith zero friction.',
+    integrationDescription:
+      'Attach the tunnel lifecycle middleware to your Hono routes to give your local server an instant, secure public URL.',
+    technologies: [
+      { label: 'Hono', icon: SiHono },
+      typescript,
+      { label: 'Node.js', icon: SiNodedotjs },
+      { label: 'Bun', icon: SiBun },
+    ],
+  },
+  {
+    id: 'tanstack',
+    name: 'TanStack Start',
+    packageName: '@outpipe/tanstack-start',
+    eyebrow: 'TanStack Start integration',
+    headline: 'Full-stack type safety\nwith instant tunnels.',
+    description:
+      'Full-stack lifecycle wrapper and middleware for TanStack Start applications with route normalization and status reporting.',
+    docsSlug: 'tanstack-start',
+    install: 'npm install @outpipe/tanstack-start',
+    fileName: 'app/server.ts',
+    code: "import { createTanStackStartTunnel, tunnelLifecycle } from '@outpipe/tanstack-start';\n\nexport const tunnel = createTanStackStartTunnel({\n  localPort: 3000,\n});\n\nawait tunnel.start();\nconsole.log('Public URL:', tunnel.state().publicUrl);",
+    colorClass: 'text-cyan-400',
+    icon: SiTanstack,
+    features: [
+      'Server-function ready',
+      'Route normalization',
+      'Lifecycle hooks',
+      'Typed SSR tunnel state',
+    ],
+    useCases: [
+      'Full-stack previews',
+      'OAuth redirect testing',
+      'SSR debugging',
+    ],
+    stackDescription:
+      'Bring Outpipe into TanStack Start applications, preserving full-stack type safety and server functions.',
+    integrationHeading: 'Expose TanStack Start\nwithout reconfiguring routes.',
+    integrationDescription:
+      'Start the Outpipe tunnel alongside your TanStack Start server so team previews, webhooks, and client testing work seamlessly.',
+    technologies: [
+      { label: 'TanStack', icon: SiTanstack },
+      { label: 'React', icon: SiReact },
+      typescript,
+      { label: 'Vite', icon: SiVite },
+    ],
+  },
 ];
 
 export function getPluginDefinition(pluginId: string) {
+  if (pluginId === 'tanstack-start') {
+    return pluginDefinitions.find((plugin) => plugin.id === 'tanstack');
+  }
   return pluginDefinitions.find((plugin) => plugin.id === pluginId);
 }

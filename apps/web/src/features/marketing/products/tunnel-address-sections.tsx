@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Activity, ArrowRight, Check, Database, Globe } from 'lucide-react';
+import { docsUrl } from '#/lib/docs';
 import { CopyButton } from './copy-button';
 import styles from './tunnel-address.module.css';
 
@@ -43,10 +44,13 @@ export function TunnelDomainSection() {
             The same address when you reconnect
           </li>
         </ul>
-        <Link to="/plugins" className={styles.link}>
+        <a
+          href={docsUrl('platform-features/custom-domains')}
+          className={styles.link}
+        >
           Connect a domain
           <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
+        </a>
       </div>
       <figure
         className={styles.domainDemo}
@@ -288,10 +292,13 @@ export function TunnelProtocolsSection() {
           Raw TCP and UDP services still need their own authentication and
           encryption.
         </p>
-        <Link to="/plugins" className={styles.link}>
+        <a
+          href={docsUrl('concepts/protocol')}
+          className={styles.link}
+        >
           Choose your protocol
           <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
+        </a>
       </div>
     </section>
   );

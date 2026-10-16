@@ -9,6 +9,7 @@ import {
   Server,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { docsUrl } from '#/lib/docs';
 import styles from './tunnel-network.module.css';
 
 const stages = [
@@ -136,10 +137,13 @@ export function TunnelNetworkDiagram() {
           connected.
         </p>
         <div className={styles.actions}>
-          <Link to="/plugins" className={styles.docsLink}>
+          <a
+            href={docsUrl('concepts/edge-routing')}
+            className={styles.docsLink}
+          >
             How the connection works
             <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
+          </a>
           {reducedMotion === true ? (
             <span className={styles.staticPreview}>Static diagram</span>
           ) : (

@@ -62,7 +62,7 @@ export function DeveloperExperience() {
                 </h3>
               </div>
               <p className="mt-6 text-white/45">
-                Use a thin adapter in Vite, Next.js, NestJS, Express, or React
+                Use a thin adapter in Vite, Next.js, Hono, TanStack Start, NestJS, Express, or React
                 while the same SDK handles the tunnel lifecycle.
               </p>
               <PluginTabs />

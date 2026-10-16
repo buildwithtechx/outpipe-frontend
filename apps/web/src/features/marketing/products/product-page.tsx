@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { docsUrl } from '#/lib/docs';
 import { type ProductId, productIds, products } from './product-content';
 import { ProductIcon } from './product-icon';
 import { ProductPreview } from './product-preview';
@@ -41,10 +42,10 @@ export function ProductPage({
                   Get started
                   <ArrowRight className="size-4" />
                 </Link>
-                <Link to="/plugins" className="pd-text-link">
+                <a href={docsUrl()} className="pd-text-link">
                   Read the docs
                   <ArrowRight className="size-4" />
-                </Link>
+                </a>
               </div>
               <ul className="pd-tags" aria-label={`${content.name} highlights`}>
                 {content.tags.map((tag) => (

@@ -12,4 +12,6 @@
   <url><loc>https://outpipe.dev/plugins/rust</loc></url>
   <url><loc>https://outpipe.dev/plugins/php</loc></url>
   <url><loc>https://outpipe.dev/plugins/angular</loc></url>
+  <url><loc>https://outpipe.dev/plugins/hono</loc></url>
+  <url><loc>https://outpipe.dev/plugins/tanstack</loc></url>
 </urlset>

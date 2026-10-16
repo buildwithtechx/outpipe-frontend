@@ -11,8 +11,10 @@ import { useEffect, useState } from 'react';
 import {
   SiExpress,
   SiGithub,
+  SiHono,
   SiNestjs,
   SiNextdotjs,
+  SiTanstack,
   SiVite,
 } from 'react-icons/si';
 import { BrandLockup } from '#/components/layout/brand-lockup';
@@ -59,6 +61,8 @@ const mobileLinks = [
 const pluginLinks = [
   { label: 'Vite', id: 'vite', icon: SiVite },
   { label: 'Next.js', id: 'next', icon: SiNextdotjs },
+  { label: 'Hono', id: 'hono', icon: SiHono },
+  { label: 'TanStack Start', id: 'tanstack', icon: SiTanstack },
   { label: 'Express', id: 'express', icon: SiExpress },
   { label: 'NestJS', id: 'nest', icon: SiNestjs },
 ];

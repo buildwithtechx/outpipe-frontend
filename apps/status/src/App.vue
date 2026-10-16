@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { fetchStatusResult } from './api';
-import { publicSiteUrl } from '@outpipe/shared';
+import { publicDocsUrl, publicSiteUrl } from '@outpipe/shared';
 import outpipeMark from '@outpipe/shared/outpipe.svg?url';
 import type { StatusPageData } from './types';
 import StatusHeader from './components/status-header.vue';
@@ -19,6 +19,7 @@ const isSubscribeOpen = ref(false);
 const slug = ref('default');
 const pageState = ref<'ready' | 'not-found' | 'unavailable'>('unavailable');
 const siteUrl = publicSiteUrl(import.meta.env.DEV, import.meta.env.VITE_PUBLIC_SITE_URL);
+const docsUrl = publicDocsUrl(import.meta.env.DEV, import.meta.env.VITE_PUBLIC_DOCS_URL);
 const tokenAction = ref<'confirm' | 'unsubscribe' | null>(null);
 const token = ref('');
 const canSubscribe = ref(false);
@@ -117,7 +118,7 @@ onUnmounted(() => {
       <p>Service availability, powered by Outpipe.</p>
       <nav class="product-footer-links" aria-label="Footer navigation">
         <a :href="siteUrl">Outpipe</a>
-        <a :href="`${siteUrl}/docs`">Docs</a>
+        <a :href="docsUrl">Docs</a>
         <a :href="`${siteUrl}/contact`">Support</a>
       </nav>
     </footer>

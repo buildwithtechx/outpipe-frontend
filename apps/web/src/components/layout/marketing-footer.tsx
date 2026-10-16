@@ -3,11 +3,13 @@ import {
   SiAngular,
   SiExpress,
   SiGo,
+  SiHono,
   SiNestjs,
   SiNextdotjs,
   SiPhp,
   SiReact,
   SiRust,
+  SiTanstack,
   SiVite,
 } from 'react-icons/si';
 import { docsUrl } from '#/lib/docs';
@@ -62,6 +64,12 @@ export function MarketingFooter() {
             </FooterPlugin>
             <FooterPlugin to="/plugins/next" icon={SiNextdotjs}>
               Next.js
+            </FooterPlugin>
+            <FooterPlugin to="/plugins/hono" icon={SiHono}>
+              Hono
+            </FooterPlugin>
+            <FooterPlugin to="/plugins/tanstack" icon={SiTanstack}>
+              TanStack Start
             </FooterPlugin>
             <FooterPlugin to="/plugins/nest" icon={SiNestjs}>
               NestJS

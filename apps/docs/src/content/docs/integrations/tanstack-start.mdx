@@ -1,0 +1,38 @@
+---
+title: TanStack Start integration
+description: Connect TanStack Start applications to Outpipe tunnels.
+---
+
+Install the adapter:
+
+```sh
+npm install @outpipe/tanstack-start
+```
+
+Initialize the tunnel in your server entry or configuration:
+
+```ts
+import { createTanStackStartTunnel, tunnelLifecycle } from '@outpipe/tanstack-start';
+
+export const tunnel = createTanStackStartTunnel({
+  relayUrl: process.env.OUTPIPE_RELAY_URL,
+  agentToken: process.env.OUTPIPE_AGENT_TOKEN,
+  localPort: 3000,
+});
+
+await tunnel.start();
+console.log('Tunnel live at:', tunnel.state().publicUrl);
+```
+
+Or wrap your server handler with the server entry helper:
+
+```ts
+import { createTanStackStartServerEntry } from '@outpipe/tanstack-start/server';
+
+export default createTanStackStartServerEntry({
+  localPort: 3000,
+  handler: app.fetch,
+});
+```
+
+The adapter automatically normalizes parameterized route paths for metrics and telemetry.

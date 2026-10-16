@@ -74,6 +74,8 @@ export default defineConfig({
             'integrations/next',
             'integrations/nest',
             'integrations/express',
+            'integrations/hono',
+            'integrations/tanstack-start',
           ],
         },
         {

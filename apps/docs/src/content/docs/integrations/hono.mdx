@@ -1,0 +1,42 @@
+---
+title: Hono integration
+description: Connect Hono applications to Outpipe tunnels.
+---
+
+Install the adapter:
+
+```sh
+npm install @outpipe/hono
+```
+
+Attach the tunnel lifecycle middleware and status endpoint to your Hono app:
+
+```ts
+import { Hono } from 'hono';
+import { createHonoTunnel, tunnelLifecycle, tunnelStatus } from '@outpipe/hono';
+
+const app = new Hono();
+const tunnel = createHonoTunnel({
+  relayUrl: process.env.OUTPIPE_RELAY_URL,
+  agentToken: process.env.OUTPIPE_AGENT_TOKEN,
+  localPort: 3000,
+});
+
+app.use('*', tunnelLifecycle(tunnel));
+app.get('/_tunnel', tunnelStatus(tunnel));
+
+app.get('/', (c) => c.text('Hello from Outpipe!'));
+
+export default app;
+```
+
+The middleware automatically starts the tunnel connection when incoming traffic arrives. Set `autoStart: false` if you want to control when the tunnel starts:
+
+```ts
+const tunnel = createHonoTunnel({
+  localPort: 3000,
+  autoStart: false,
+});
+
+await tunnel.start();
+```

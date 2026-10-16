@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { ArrowRight } from 'lucide-react';
 import { SiGithub } from 'react-icons/si';
+import { docsUrl } from '#/lib/docs';
 import { TunnelAddressSections } from './tunnel-address-sections';
 import { TunnelDeveloperExperience } from './tunnel-developer-experience';
 import { TunnelNetworkDiagram } from './tunnel-network-diagram';
@@ -93,10 +94,10 @@ function TunnelGetStartedSection() {
           Get started
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
-        <Link to="/plugins" className="pd-text-link">
+        <a href={docsUrl()} className="pd-text-link">
           Read the docs
           <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
+        </a>
       </div>
     </section>
   );

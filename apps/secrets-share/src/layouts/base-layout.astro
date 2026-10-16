@@ -1,9 +1,10 @@
 ---
 import '../styles/global.css';
 import outpipeMark from '@outpipe/shared/outpipe.svg?url';
-import { publicSiteUrl } from '@outpipe/shared';
+import { publicDocsUrl, publicSiteUrl } from '@outpipe/shared';
 
 const siteUrl = publicSiteUrl(import.meta.env.DEV, import.meta.env.PUBLIC_SITE_URL);
+const docsUrl = publicDocsUrl(import.meta.env.DEV, import.meta.env.PUBLIC_DOCS_URL);
 
 interface Props {
   title?: string;
@@ -44,7 +45,7 @@ const {
         </a>
         <nav class="product-nav" aria-label="Product navigation">
           <a href="/">Share a secret</a>
-          <a href={`${siteUrl}/docs`}>Docs</a>
+          <a href={docsUrl}>Docs</a>
           <a href={`${siteUrl}/login`}>Sign in</a>
         </nav>
       </div>
