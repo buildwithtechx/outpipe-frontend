@@ -147,7 +147,7 @@ export function ProductPage({
                 <p className="pd-eyebrow">BETTER TOGETHER</p>
                 <h2 id="connected-title">{content.connection}</h2>
               </div>
-              <Link to="/plugins" className="pd-text-link">
+              <Link to={`/products/${content.next}`} className="pd-text-link">
                 Explore {products[content.next].name}
                 <ArrowRight className="size-4" />
               </Link>
@@ -226,10 +226,7 @@ export function ProductsIndex() {
                   <li key={tag}>{tag}</li>
                 ))}
               </ul>
-              <Link
-                to={id === 'tunnels' ? '/products/tunnels' : '/plugins'}
-                className="pd-text-link mt-4"
-              >
+              <Link to={`/products/${id}`} className="pd-text-link mt-4">
                 Explore {products[id].name}
                 <ArrowRight className="size-4" />
               </Link>

@@ -54,7 +54,10 @@ import { Route as OrgSlugUptimeStatusPageRouteImport } from './routes/$orgSlug/u
 import { Route as MarketingPluginsIndexRouteImport } from './routes/_marketing/plugins/index'
 import { Route as MarketingPluginsPluginIdRouteImport } from './routes/_marketing/plugins/$pluginId'
 import { Route as MarketingProductsIndexRouteImport } from './routes/_marketing/products.index'
+import { Route as MarketingProductsObservabilityRouteImport } from './routes/_marketing/products.observability'
+import { Route as MarketingProductsSecretsRouteImport } from './routes/_marketing/products.secrets'
 import { Route as MarketingProductsTunnelsRouteImport } from './routes/_marketing/products.tunnels'
+import { Route as MarketingProductsUptimeRouteImport } from './routes/_marketing/products.uptime'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
 import { Route as AdminOrganizationsOrganizationIDRouteImport } from './routes/admin/organizations/$organizationID'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
@@ -286,12 +289,29 @@ const MarketingProductsIndexRoute = MarketingProductsIndexRouteImport.update({
   path: '/products/',
   getParentRoute: () => MarketingRoute,
 } as any)
+const MarketingProductsObservabilityRoute =
+  MarketingProductsObservabilityRouteImport.update({
+    id: '/products/observability',
+    path: '/products/observability',
+    getParentRoute: () => MarketingRoute,
+  } as any)
+const MarketingProductsSecretsRoute =
+  MarketingProductsSecretsRouteImport.update({
+    id: '/products/secrets',
+    path: '/products/secrets',
+    getParentRoute: () => MarketingRoute,
+  } as any)
 const MarketingProductsTunnelsRoute =
   MarketingProductsTunnelsRouteImport.update({
     id: '/products/tunnels',
     path: '/products/tunnels',
     getParentRoute: () => MarketingRoute,
   } as any)
+const MarketingProductsUptimeRoute = MarketingProductsUptimeRouteImport.update({
+  id: '/products/uptime',
+  path: '/products/uptime',
+  getParentRoute: () => MarketingRoute,
+} as any)
 const AdminOrganizationsIndexRoute = AdminOrganizationsIndexRouteImport.update({
   id: '/organizations/',
   path: '/organizations/',
@@ -355,7 +375,10 @@ export interface FileRoutesByFullPath {
   '/$orgSlug/tunnels/fleets': typeof OrgSlugTunnelsFleetsRoute
   '/$orgSlug/uptime/status-page': typeof OrgSlugUptimeStatusPageRoute
   '/plugins/$pluginId': typeof MarketingPluginsPluginIdRoute
+  '/products/observability': typeof MarketingProductsObservabilityRoute
+  '/products/secrets': typeof MarketingProductsSecretsRoute
   '/products/tunnels': typeof MarketingProductsTunnelsRoute
+  '/products/uptime': typeof MarketingProductsUptimeRoute
   '/admin/organizations/$organizationID': typeof AdminOrganizationsOrganizationIDRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/$orgSlug/settings/': typeof OrgSlugSettingsIndexRoute
@@ -403,7 +426,10 @@ export interface FileRoutesByTo {
   '/$orgSlug/tunnels/fleets': typeof OrgSlugTunnelsFleetsRoute
   '/$orgSlug/uptime/status-page': typeof OrgSlugUptimeStatusPageRoute
   '/plugins/$pluginId': typeof MarketingPluginsPluginIdRoute
+  '/products/observability': typeof MarketingProductsObservabilityRoute
+  '/products/secrets': typeof MarketingProductsSecretsRoute
   '/products/tunnels': typeof MarketingProductsTunnelsRoute
+  '/products/uptime': typeof MarketingProductsUptimeRoute
   '/admin/organizations/$organizationID': typeof AdminOrganizationsOrganizationIDRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/$orgSlug/settings': typeof OrgSlugSettingsIndexRoute
@@ -456,7 +482,10 @@ export interface FileRoutesById {
   '/$orgSlug/tunnels/fleets': typeof OrgSlugTunnelsFleetsRoute
   '/$orgSlug/uptime_/status-page': typeof OrgSlugUptimeStatusPageRoute
   '/_marketing/plugins/$pluginId': typeof MarketingPluginsPluginIdRoute
+  '/_marketing/products/observability': typeof MarketingProductsObservabilityRoute
+  '/_marketing/products/secrets': typeof MarketingProductsSecretsRoute
   '/_marketing/products/tunnels': typeof MarketingProductsTunnelsRoute
+  '/_marketing/products/uptime': typeof MarketingProductsUptimeRoute
   '/admin/organizations/$organizationID': typeof AdminOrganizationsOrganizationIDRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
   '/$orgSlug/settings/': typeof OrgSlugSettingsIndexRoute
@@ -509,7 +538,10 @@ export interface FileRouteTypes {
     | '/$orgSlug/tunnels/fleets'
     | '/$orgSlug/uptime/status-page'
     | '/plugins/$pluginId'
+    | '/products/observability'
+    | '/products/secrets'
     | '/products/tunnels'
+    | '/products/uptime'
     | '/admin/organizations/$organizationID'
     | '/admin/users/$userId'
     | '/$orgSlug/settings/'
@@ -557,7 +589,10 @@ export interface FileRouteTypes {
     | '/$orgSlug/tunnels/fleets'
     | '/$orgSlug/uptime/status-page'
     | '/plugins/$pluginId'
+    | '/products/observability'
+    | '/products/secrets'
     | '/products/tunnels'
+    | '/products/uptime'
     | '/admin/organizations/$organizationID'
     | '/admin/users/$userId'
     | '/$orgSlug/settings'
@@ -609,7 +644,10 @@ export interface FileRouteTypes {
     | '/$orgSlug/tunnels/fleets'
     | '/$orgSlug/uptime_/status-page'
     | '/_marketing/plugins/$pluginId'
+    | '/_marketing/products/observability'
+    | '/_marketing/products/secrets'
     | '/_marketing/products/tunnels'
+    | '/_marketing/products/uptime'
     | '/admin/organizations/$organizationID'
     | '/admin/users/$userId'
     | '/$orgSlug/settings/'
@@ -947,11 +985,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingProductsIndexRouteImport
       parentRoute: typeof MarketingRoute
     }
+    '/_marketing/products/observability': {
+      id: '/_marketing/products/observability'
+      path: '/products/observability'
+      fullPath: '/products/observability'
+      preLoaderRoute: typeof MarketingProductsObservabilityRouteImport
+      parentRoute: typeof MarketingRoute
+    }
+    '/_marketing/products/secrets': {
+      id: '/_marketing/products/secrets'
+      path: '/products/secrets'
+      fullPath: '/products/secrets'
+      preLoaderRoute: typeof MarketingProductsSecretsRouteImport
+      parentRoute: typeof MarketingRoute
+    }
     '/_marketing/products/tunnels': {
       id: '/_marketing/products/tunnels'
       path: '/products/tunnels'
       fullPath: '/products/tunnels'
       preLoaderRoute: typeof MarketingProductsTunnelsRouteImport
+      parentRoute: typeof MarketingRoute
+    }
+    '/_marketing/products/uptime': {
+      id: '/_marketing/products/uptime'
+      path: '/products/uptime'
+      fullPath: '/products/uptime'
+      preLoaderRoute: typeof MarketingProductsUptimeRouteImport
       parentRoute: typeof MarketingRoute
     }
     '/admin/organizations/': {
@@ -1056,7 +1115,10 @@ interface MarketingRouteChildren {
   MarketingReportBugRoute: typeof MarketingReportBugRoute
   MarketingTermsRoute: typeof MarketingTermsRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
+  MarketingProductsObservabilityRoute: typeof MarketingProductsObservabilityRoute
+  MarketingProductsSecretsRoute: typeof MarketingProductsSecretsRoute
   MarketingProductsTunnelsRoute: typeof MarketingProductsTunnelsRoute
+  MarketingProductsUptimeRoute: typeof MarketingProductsUptimeRoute
   MarketingProductsIndexRoute: typeof MarketingProductsIndexRoute
 }
 
@@ -1069,7 +1131,10 @@ const MarketingRouteChildren: MarketingRouteChildren = {
   MarketingReportBugRoute: MarketingReportBugRoute,
   MarketingTermsRoute: MarketingTermsRoute,
   MarketingIndexRoute: MarketingIndexRoute,
+  MarketingProductsObservabilityRoute: MarketingProductsObservabilityRoute,
+  MarketingProductsSecretsRoute: MarketingProductsSecretsRoute,
   MarketingProductsTunnelsRoute: MarketingProductsTunnelsRoute,
+  MarketingProductsUptimeRoute: MarketingProductsUptimeRoute,
   MarketingProductsIndexRoute: MarketingProductsIndexRoute,
 }
 

@@ -21,7 +21,34 @@ import { useGitHubStars } from '#/hooks/use-github-stars';
 import { docsUrl } from '#/lib/docs';
 import { formatGitHubStarCount, githubRepositoryUrl } from '#/lib/github';
 
+const productNavLinks = [
+  {
+    name: 'Tunnels',
+    description: 'Public URLs and ports for services on your machine',
+    to: '/products/tunnels' as const,
+  },
+  {
+    name: 'Observability',
+    description: 'Traces, logs, and metrics with request context',
+    to: '/products/observability' as const,
+  },
+  {
+    name: 'Secrets',
+    description: 'Encrypted runtime configuration injection',
+    to: '/products/secrets' as const,
+  },
+  {
+    name: 'Uptime',
+    description: 'Synthetic monitoring & public status pages',
+    to: '/products/uptime' as const,
+  },
+];
+
 const mobileLinks = [
+  { label: 'Tunnels', to: '/products/tunnels' as const },
+  { label: 'Observability', to: '/products/observability' as const },
+  { label: 'Secrets', to: '/products/secrets' as const },
+  { label: 'Uptime', to: '/products/uptime' as const },
   { label: 'Pricing', to: '/pricing' as const },
   { label: 'Changelog', to: '/changelog' as const },
   { label: 'Plugins', to: '/plugins' as const },
@@ -38,6 +65,7 @@ const pluginLinks = [
 
 export function MarketingHeader() {
   const [open, setOpen] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
   const [docsOpen, setDocsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -69,10 +97,49 @@ export function MarketingHeader() {
           aria-label="Main navigation"
         >
           <DropdownButton
+            label="Products"
+            open={productsOpen}
+            onOpen={() => {
+              setProductsOpen(true);
+              setDocsOpen(false);
+              setHelpOpen(false);
+            }}
+            onClose={() => setProductsOpen(false)}
+          >
+            <div className="flex flex-col gap-1">
+              {productNavLinks.map((product) => (
+                <Link
+                  key={product.name}
+                  to={product.to}
+                  className="group flex flex-col rounded-xl px-3.5 py-2.5 transition-colors hover:bg-white/5"
+                  onClick={() => setProductsOpen(false)}
+                >
+                  <strong className="text-sm font-medium text-white transition-colors group-hover:text-indigo-300">
+                    {product.name}
+                  </strong>
+                  <span className="text-xs text-white/50">
+                    {product.description}
+                  </span>
+                </Link>
+              ))}
+              <div className="mt-1 border-t border-white/10 pt-2">
+                <Link
+                  to="/products"
+                  className="flex items-center justify-between rounded-lg px-3.5 py-2 text-xs text-white/70 transition-colors hover:bg-white/5 hover:text-indigo-300"
+                  onClick={() => setProductsOpen(false)}
+                >
+                  <span>All products overview</span>
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
+          </DropdownButton>
+          <DropdownButton
             label="Docs"
             open={docsOpen}
             onOpen={() => {
               setDocsOpen(true);
+              setProductsOpen(false);
               setHelpOpen(false);
             }}
             onClose={() => setDocsOpen(false)}
