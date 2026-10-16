@@ -292,10 +292,7 @@ export function TunnelProtocolsSection() {
           Raw TCP and UDP services still need their own authentication and
           encryption.
         </p>
-        <a
-          href={docsUrl('concepts/protocol')}
-          className={styles.link}
-        >
+        <a href={docsUrl('concepts/protocol')} className={styles.link}>
           Choose your protocol
           <ArrowRight className="size-4" aria-hidden="true" />
         </a>
