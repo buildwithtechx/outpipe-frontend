@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import { MarketingContainer } from '#/components/layout';
 import { docsUrl } from '#/lib/docs';
 import { PluginBeam } from './plugin-beam';
-import type { PluginDefinition } from './plugin-data';
+import type { PluginDefinition, PluginId } from './plugin-data';
 
 const accents = {
   sdk: {
@@ -49,7 +49,19 @@ const accents = {
     text: 'text-red-300',
     button: 'bg-red-300 text-[#19080d]',
   },
-} as const;
+  hono: {
+    text: 'text-amber-400',
+    button: 'bg-amber-400 text-[#171107]',
+  },
+  tanstack: {
+    text: 'text-cyan-400',
+    button: 'bg-cyan-400 text-[#081116]',
+  },
+  'tanstack-start': {
+    text: 'text-cyan-400',
+    button: 'bg-cyan-400 text-[#081116]',
+  },
+} satisfies Record<PluginId, { text: string; button: string }>;
 
 const particleAngles = [
   0,
